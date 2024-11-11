@@ -4,22 +4,31 @@
     <div class="alert alert-success">¡Ejemplo mensaje de éxito!</div>
     <div class="alert alert-error">¡Ejemplo mensaje de error!</div>
     -->
-
     <section id="films">
         <h2>Peliculas</h2>
+<?php
+    try {
+        $stmtCategories = $conn->prepare('SELECT category_idkk, name FROM category');
+        $stmtCategories->execute();
+        $categories = $stmtCategories->fetchAll(PDO::FETCH_OBJ);
+
+?>
         <form action="film.php" method="get">
           <fieldset>
             <legend>Categorías</legend>
             <select name="category" id="">
               <option selected disabled>Elige una categoría</option>
 <?php
-    try {
-        $stmtCategories = $conn->prepare('SELECT category_idkk, name FROM category');
-        $stmtCategories->execute();
-        $categories = $stmtCategories->fetchAll(PDO::FETCH_OBJ);
         foreach($categories as $category) {
             printf('<option>%s</option>', $category->name);
         }
+?>
+            </select>
+            <input type="submit" name="search" value="buscar">
+            <input type="submit" name="delete" value="eliminar">
+          </fieldset>
+        </form>
+<?php
         $stmtCategories = null;
     } catch (Exception $e) {
         die('<p>Se jodio: ' . $e->getMessage() . '</p>');
@@ -27,11 +36,6 @@
     
     $conn = null; 
 ?>
-            </select>
-            <input type="submit" name="search" value="buscar">
-            <input type="submit" name="delete" value="eliminar">
-          </fieldset>
-        </form>
         <nav>
             <fieldset>
                 <legend>Acciones</legend>                    
